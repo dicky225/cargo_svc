@@ -3,6 +3,6 @@
 -- Create database
 CREATE DATABASE IF NOT EXISTS cargo_db;
 -- Create user (if not exists) and grant privileges
-CREATE USER IF NOT EXISTS 'cargo_user'@'localhost' IDENTIFIED BY 'cargo_password';
-GRANT ALL PRIVILEGES ON cargo_db.* TO 'cargo_user'@'localhost';
+CREATE USER IF NOT EXISTS 'cargo_user'@'%' IDENTIFIED BY 'cargo_password';
+GRANT ALL PRIVILEGES ON cargo_db.* TO 'cargo_user'@'%';
 FLUSH PRIVILEGES;

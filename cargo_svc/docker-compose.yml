@@ -1,0 +1,24 @@
+version: '3.8'
+services:
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/cargo_db
+      SPRING_DATASOURCE_USERNAME: cargo_user
+      SPRING_DATASOURCE_PASSWORD: cargo_password
+    depends_on:
+      - mysql
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: cargo_db
+      MYSQL_USER: cargo_user
+      MYSQL_PASSWORD: cargo_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+      - ./mysql/data_insert.sql:/docker-entrypoint-initdb.d/data_insert.sql
