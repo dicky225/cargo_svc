@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-init-scripts
+data:
+  01-init-db.sql: |
+    -- Create database if not exists
+    CREATE DATABASE IF NOT EXISTS cargo_db;
+    USE cargo_db;
+
+    -- Create user and grant privileges
+    CREATE USER IF NOT EXISTS 'cargo_user'@'%' IDENTIFIED BY 'cargo_password';
+    GRANT ALL PRIVILEGES ON cargo_db.* TO 'cargo_user'@'%';
+    FLUSH PRIVILEGES;

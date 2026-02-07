@@ -8,8 +8,11 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/cargo_db
       SPRING_DATASOURCE_USERNAME: cargo_user
       SPRING_DATASOURCE_PASSWORD: cargo_password
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
+    restart: on-failure
   mysql:
     image: mysql:8.0
     environment:
@@ -20,5 +23,14 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - ./mysql/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
-      - ./mysql/data_insert.sql:/docker-entrypoint-initdb.d/data_insert.sql
+      - ./mysql/init-db.sql:/docker-entrypoint-initdb.d/01-init-db.sql
+      - ./mysql/data_insert.sql:/docker-entrypoint-initdb.d/02-data_insert.sql
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  mysql_data:
